@@ -29,8 +29,8 @@ services:
     command: jupyter lab --ip=0.0.0.0 --port=8890 --no-browser --allow-root --NotebookApp.token=NovaSenha123
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.jupyterlab.rule=Host(`localhost`)"
-      - "traefik.http.services.jupyterlab.loadbalancer.server.port=8888"
+      - "traefik.http.routers.jupyterlab.rule=Host(`127.0.0.1`)"
+      - "traefik.http.services.jupyterlab.loadbalancer.server.port=8890"
       - "traefik.http.routers.jupyterlab.entrypoints=web"
 
 
@@ -41,8 +41,8 @@ services:
       - ./workspace:/opt/workspace
     labels:
       - "traefik.enable=true"
-      #- "traefik.http.routers.spark-master.rule=PathPrefix(`/spark-master`) || (HeadersRegexp(`Referer`, `http://localhost/spark-master`) && (PathPrefix(`/static`) || PathPrefix(`/app`) ))"
-      - "traefik.http.routers.spark-master.rule=PathPrefix(`/spark-master`) || ((HeadersRegexp(`Referer`, `http://localhost/spark-master`) || HeadersRegexp(`Referer`, `http://localhost/app`)) && (PathPrefix(`/static`) || PathPrefix(`/app`) ))"
+      #- "traefik.http.routers.spark-master.rule=PathPrefix(`/spark-master`) || (HeadersRegexp(`Referer`, `http://127.0.0.1/spark-master`) && (PathPrefix(`/static`) || PathPrefix(`/app`) ))"
+      - "traefik.http.routers.spark-master.rule=PathPrefix(`/spark-master`) || ((HeadersRegexp(`Referer`, `http://127.0.0.1/spark-master`) || HeadersRegexp(`Referer`, `http://127.0.0.1/app`)) && (PathPrefix(`/static`) || PathPrefix(`/app`) ))"
       - "traefik.http.services.spark-master.loadbalancer.server.port=8080"
       - "traefik.http.routers.spark-master.entrypoints=web"
 
@@ -58,7 +58,7 @@ services:
       - spark-master
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.spark-worker-1.rule=PathPrefix(`/spark-worker-1`) || (HeadersRegexp(`Referer`, `http://localhost/spark-worker-1`) && PathPrefix(`/static`))"
+      - "traefik.http.routers.spark-worker-1.rule=PathPrefix(`/spark-worker-1`) || (HeadersRegexp(`Referer`, `http://127.0.0.1/spark-worker-1`) && PathPrefix(`/static`))"
       - "traefik.http.services.spark-worker-1.loadbalancer.server.port=8081"
       - "traefik.http.routers.spark-worker-1.entrypoints=web"
 
@@ -74,6 +74,6 @@ services:
       - spark-master
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.spark-worker-2.rule=PathPrefix(`/spark-worker-2`) || (HeadersRegexp(`Referer`, `http://localhost/spark-worker-2`) && PathPrefix(`/static`))"
+      - "traefik.http.routers.spark-worker-2.rule=PathPrefix(`/spark-worker-2`) || (HeadersRegexp(`Referer`, `http://127.0.0.1/spark-worker-2`) && PathPrefix(`/static`))"
       - "traefik.http.services.spark-worker-2.loadbalancer.server.port=8081"
       - "traefik.http.routers.spark-worker-2.entrypoints=web"
